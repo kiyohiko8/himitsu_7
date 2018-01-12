@@ -1,5 +1,6 @@
 """
 ##プログラム概要
+- 手法Aの概要版
 - 被験者に知っているひみつ道具を入力させる
 	+ 質問形式（ランダム）
 	+ 入力した結果から被験者の知識リストを作成	
@@ -28,8 +29,8 @@ def mk_user_know(sorted):
 
 	#知識情報入力
 	wiselist = []
+	cnt = 0	
 	for item in sorted:
-		cnt = 0
 		print(item[1])
 		data = input("これを知っていれば1, 知らなければ0を入力してください:")
 		#例外処理
@@ -44,9 +45,11 @@ def mk_user_know(sorted):
 		if data == str(1):
 			wiselist.append(item[1])
 			cnt += 1
-	#知っている知識が1個以上になったらループを抜け出す
-		if cnt != 0:
-			break
+	#知っている知識が3個以上になったらループを抜け出す(2018/1/12変更)
+			if cnt > 2:
+				break
+			else:
+				continue
 
 	return wiselist
 	
@@ -64,9 +67,7 @@ def mk_input_data(wiselist, all_word_list):
 				input_data.append(u_data)
 				break
 
-		
-					
-					
+						
 	return input_data
 
 
@@ -91,6 +92,7 @@ def mk_know_dic(x, y, vec):
 
 if __name__ == "__main__":
 
+	##データ・パラメータの読み込み
 	#全ひみつ道具データの読み込み
 	himitsu  = himitsu_data_gd_5.mk_allword_list()
 	#ひみつ道具ベクトルの作成
@@ -99,10 +101,9 @@ if __name__ == "__main__":
 	collected = collected_himitsu_data_5.read_csv("himitsu_data2.csv")
 	#出現順にsortしたデータの読み込み
 	sorted  = collected_himitsu_sort.count_sort(collected, himitsu)
-	
 	#学習結果の読み込み
-	model = model_from_json(open('predict_model_himitsu_a.json').read())
-	model.load_weights('predict_weights_himitsu_a.h5')
+	model = model_from_json(open('predict_model_himitsu_1.json').read())
+	model.load_weights('predict_weights_himitsu_1.h5')
 	
 	#概要の出力
 	model.summary();
@@ -122,7 +123,7 @@ if __name__ == "__main__":
 	
 		#ユーザデータの推定値出力...入力は被験者の入力作業によって得られたデータ
 		#predintionsは出力であり、それぞれの単語の推定値を確率で出力
-		predictions = model.predict(input_data, 1, 1)
+		predictions = model.predict(input_data ,1 ,1)
 		print(predictions)
 
 
