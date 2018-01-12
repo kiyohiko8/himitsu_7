@@ -1,6 +1,7 @@
 
 """
 ###プログラム概要
+- 手法Aの改良版
 - 収集したデータより入力データと教師データを作成
 """
 #collected himitsu-data by google form 
@@ -13,18 +14,23 @@ import collected_himitsu_sort
 import re
 
 
-#訓練データの作成	
+##訓練データの作成
+#all_word_list 全ひみつ道具データ
+#collected     収集されたひみつ道具の既知情報データ
+#sorted        全ひみつ道具が認知度の低い順にソートされたデータ
 def mk_x_train(all_word_list, collected, sorted):
 	
 	#ユーザ毎のデータをまとめた全データ
 	x_train = []
 	
+	##学習時入力用データの作成
 	#items:集められたデータのうちの１ユーザ分
 	for items in collected:
 		x_data = np.zeros(271, int)
 		cnt = 0
 		for x in sorted:
-			if cnt == 0:
+			#知っている単語が3つになるまで抽出(2018/1/12変更)
+			if cnt < 3:
 				if x[1] in items:
 					for i, word in enumerate(all_word_list):
 						if word == x[1]:
