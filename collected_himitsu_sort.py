@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 import re
 
-
+"""手法Aの改良版"""
 
 
 #csvを読み込んでデータ作成	
